@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Note Trainer</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(circle at top, #1e1e2f, #0f0f17);
+        color: white;
+        overflow: hidden;
+      }
+
+      .game-container {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 50px;
+        border-radius: 25px;
+        text-align: center;
+        width: 550px;
+        box-shadow: 0 0 40px rgba(0, 255, 200, 0.15);
+        animation: fadeIn 0.8s ease;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 24px;
+        opacity: 0.8;
+      }
+
+      #letter {
+        font-size: 150px;
+        font-weight: 800;
+        margin: 30px 0;
+        background: linear-gradient(90deg, #00ffd5, #00a2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: pop 0.3s ease;
+      }
+
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      button {
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        transition: all 0.2s ease;
+      }
+
+      button:hover {
+        background: rgba(0, 255, 213, 0.2);
+        transform: translateY(-3px);
+      }
+
+      button.correct {
+        background: #00c853;
+        box-shadow: 0 0 15px #00c853;
+      }
+
+      button.wrong {
+        background: #d50000;
+        box-shadow: 0 0 15px #d50000;
+      }
+
+      .score {
+        margin-top: 30px;
+        font-size: 14px;
+        opacity: 0.7;
+      }
+
+      .score span {
+        font-weight: 600;
+      }
+
+      @keyframes pop {
+        0% {
+          transform: scale(0.7);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="game-container">
+      <h1>Qual é essa nota?</h1>
+      <div id="letter">A</div>
+      <div class="buttons" id="buttons"></div>
+      <div class="score">
+        ✅ Acertos: <span id="correctCount">0</span> | ❌ Erros:
+        <span id="wrongCount">0</span>
+      </div>
+    </div>
+
+    <script>
+      const notes = [
+        { letter: "C", name: "Dó" },
+        { letter: "D", name: "Ré" },
+        { letter: "E", name: "Mi" },
+        { letter: "F", name: "Fá" },
+        { letter: "G", name: "Sol" },
+        { letter: "A", name: "Lá" },
+        { letter: "B", name: "Si" },
+      ];
+
+      let currentNote;
+      let correct = 0;
+      let wrong = 0;
+
+      const letterElement = document.getElementById("letter");
+      const buttonsContainer = document.getElementById("buttons");
+      const correctCount = document.getElementById("correctCount");
+      const wrongCount = document.getElementById("wrongCount");
+
+      function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+      }
+
+      function newRound() {
+        buttonsContainer.innerHTML = "";
+
+        currentNote = notes[Math.floor(Math.random() * notes.length)];
+        letterElement.textContent = currentNote.letter;
+        letterElement.style.animation = "none";
+        void letterElement.offsetWidth;
+        letterElement.style.animation = "pop 0.3s ease";
+
+        const options = shuffle([...notes]).slice(0, 4);
+
+        if (!options.find((n) => n.name === currentNote.name)) {
+          options[0] = currentNote;
+        }
+
+        shuffle(options).forEach((note) => {
+          const btn = document.createElement("button");
+          btn.textContent = note.name;
+          btn.onclick = () => checkAnswer(note, btn);
+          buttonsContainer.appendChild(btn);
+        });
+      }
+
+      function checkAnswer(note, button) {
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach((btn) => (btn.disabled = true));
+
+        if (note.name === currentNote.name) {
+          button.classList.add("correct");
+          correct++;
+          correctCount.textContent = correct;
+        } else {
+          button.classList.add("wrong");
+          wrong++;
+          wrongCount.textContent = wrong;
+        }
+
+        setTimeout(newRound, 2000);
+      }
+
+      newRound();
+    </script>
+  </body>
+</html>
