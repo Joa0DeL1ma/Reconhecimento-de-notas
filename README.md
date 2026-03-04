@@ -8,7 +8,8 @@ A ideia é simples: aparece uma nota (A–G) na tela e você precisa escolher o 
 
 ## 🎬 Demonstração
 
-https://github.com/user-attachments/assets/58fd8bd4-b8d4-4277-bc67-2479ed0909f2
+![GIF Notas Musicais](https://github.com/user-attachments/assets/3634904f-e43a-454a-bf24-569cc6b877cf)
+
 ---
 
 ## 🚀 Como funciona
